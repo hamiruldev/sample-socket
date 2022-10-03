@@ -44,29 +44,92 @@
       </tr>
     </tbody>
   </table>
+
+  <div id="root">
+    <h1>Simple Chat App with geckos.io</h1>
+
+    <form onsubmit="return false;">
+      <input type="text" name="text" id="text" value="" />
+      <!-- <input type="button" value="submit" id="button" /> -->
+      <button onclick="sentMessage()">submits</button>
+    </form>
+
+    <p id="message">
+      Please wait while connecting....<br />
+      <small>Should not take longer than 10 seconds</small>
+    </p>
+
+    <ul id="list"></ul>
+  </div>
+
+
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    #root {
+      max-width: 550px;
+      margin: 0 auto;
+    }
+  </style>
+
+
+
+
+
   <script>
-    (function () {
-      const rss = document.getElementById('rss');
-      const heapTotal = document.getElementById('heapTotal');
-      const heapUsed = document.getElementById('heapUsed');
-      const external = document.getElementById('external');
 
-      // will not use tls if the connection is not made over https
-      const protocol = window.location.protocol.includes('https') ? 'wss' : 'ws'
-      const ws = new WebSocket(`${protocol}://${location.host}`);
+    const rss = document.getElementById('rss');
+    const heapTotal = document.getElementById('heapTotal');
+    const heapUsed = document.getElementById('heapUsed');
+    const external = document.getElementById('external');
+    const ButtonMessage = document.querySelector('#text');
 
-      ws.onmessage = function (event) {
-        const data = JSON.parse(event.data);
+    // will not use tls if the connection is not made over https
+    const protocol = window.location.protocol.includes('https') ? 'wss' : 'ws'
+    const ws = new WebSocket(`${protocol}://${location.host}`);
 
-        console.log("data", data)
 
-        rss.textContent = data.rss;
-        heapTotal.textContent = data.heapTotal;
-        heapUsed.textContent = data.heapUsed;
-        external.textContent = data.external;
-      };
-    })();
+
+
+
+    // LISTEN DARI SERVER HANTAR KE CLIENT
+    ws.onmessage = (event) => {
+      // const data = JSON.parse(event.data);
+
+      console.log("data-->", event.data)
+
+      // ws.send('Hello World!');
+
+      rss.textContent = event.data;
+      // heapTotal.textContent = data.heapTotal;
+      // heapUsed.textContent = data.heapUsed;
+      // external.textContent = data.external;
+    };
+
+    // Listen for messages
+    // ws.addEventListener('message', (event) => {
+    //   console.log('Message from server ', event.data);
+    // });
+
+
+
+
+    const sentMessage = () => {
+      if (!ws) {
+        console.log("WebSocket error")
+        return
+      } else {
+        // const message = JSON.stringify({ message: ButtonMessage.value })
+        ws.send(ButtonMessage.value)
+      }
+    }
+
   </script>
+
+
+
 </body>
 
 </html>
