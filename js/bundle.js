@@ -617,7 +617,7 @@
   var lib_default = channel_default;
 
   // js/index.js
-  var channel = lib_default({ port: 3e3 });
+  var channel = lib_default({ port: 8080 });
   var button = document.getElementById("button");
   var text = document.getElementById("text");
   var list = document.getElementById("list");
