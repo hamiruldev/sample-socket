@@ -18,32 +18,7 @@
 </head>
 
 <body>
-  <h1>Server stats</h1>
-  <table>
-    <thead>
-      <tr>
-        <th colspan="2">Memory usage</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>RSS</td>
-        <td id="rss"></td>
-      </tr>
-      <tr>
-        <td>Heap total</td>
-        <td id="heapTotal"></td>
-      </tr>
-      <tr>
-        <td>Heap used</td>
-        <td id="heapUsed"></td>
-      </tr>
-      <tr>
-        <td>External</td>
-        <td id="external"></td>
-      </tr>
-    </tbody>
-  </table>
+
 
   <div id="root">
     <h1>Simple Chat App with geckos.io</h1>
@@ -74,54 +49,38 @@
     }
   </style>
 
-
-
-
-
   <script>
-
-    const rss = document.getElementById('rss');
-    const heapTotal = document.getElementById('heapTotal');
-    const heapUsed = document.getElementById('heapUsed');
-    const external = document.getElementById('external');
     const ButtonMessage = document.querySelector('#text');
+    const message = document.getElementById('message')
 
     // will not use tls if the connection is not made over https
     const protocol = window.location.protocol.includes('https') ? 'wss' : 'ws'
     const ws = new WebSocket(`${protocol}://${location.host}`);
 
-
-
-
+    ws.onopen = () => {
+      message.innerHTML = "You're connected :)"
+    }
 
     // LISTEN DARI SERVER HANTAR KE CLIENT
     ws.onmessage = (event) => {
-      // const data = JSON.parse(event.data);
-
-      console.log("data-->", event.data)
-
-      // ws.send('Hello World!');
-
-      rss.textContent = event.data;
-      // heapTotal.textContent = data.heapTotal;
-      // heapUsed.textContent = data.heapUsed;
-      // external.textContent = data.external;
+      appendMessage(event.data)
     };
 
-    // Listen for messages
-    // ws.addEventListener('message', (event) => {
-    //   console.log('Message from server ', event.data);
-    // });
+    const appendMessage = (msg) => {
+      const list = document.getElementById('list')
 
-
-
+      if (list) {
+        const li = document.createElement('li')
+        li.innerHTML = msg
+        list.appendChild(li)
+      }
+    }
 
     const sentMessage = () => {
       if (!ws) {
         console.log("WebSocket error")
         return
       } else {
-        // const message = JSON.stringify({ message: ButtonMessage.value })
         ws.send(ButtonMessage.value)
       }
     }

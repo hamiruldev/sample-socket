@@ -14,10 +14,10 @@ const wss = new WebSocket.Server({ server });
 
 // ESTABLISH CONNECTION WEBSOCKET
 wss.on("connection", (ws) => {
+  // SERVER RECEIVED FROM ALL CLIENT
 
-  // SERVER RECEIVED FROM CLIENT
   ws.on("message", (data, isBinary) => {
-    // const dataRec = JSON.stringify(data);
+    // SERVER BRODCAST MESSAGE TO ALL CLIENT
     wss.clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(data, { binary: isBinary });
